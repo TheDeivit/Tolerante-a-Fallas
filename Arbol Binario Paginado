@@ -1,0 +1,315 @@
+#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <string>
+#include <conio.h>
+#include <iomanip>
+using namespace std;
+
+struct registro{
+    int  NR;
+    char dato[40];
+    int  PD;
+    int  PI;
+    int  ARE;
+}r, a;
+
+struct encabezado{
+    int NRS;    // numero de registros
+    int RAIZ;
+    int URE;
+}e;
+
+FILE *fd;
+int lr, le;   // longitud de registro y encabezado
+
+void Escribir()
+{
+    int x, pos;
+    char rpt, lado;
+    
+    cout<<"-------------------------------"<<endl;
+    cout<<"      Escribir Estudiante"<<endl;
+    cout<<"-------------------------------"<<endl;
+
+    if((fd=fopen("Estudiantes.txt", "w+"))==NULL)
+        cout<<"El archivo no existe..."<< endl;
+    else
+    {
+	    // Inicializando variables
+	    e.NRS  = 0;
+	    e.RAIZ = -1;
+	    e.URE  = -1;
+	    fwrite(&e, le, 1, fd);
+	
+	    do
+		{
+	        r.NR = ++e.NRS;
+	        fflush(stdin);
+	        cout << "Nombre: ";
+			gets(r.dato);
+			for(int z=0;z<strlen(r.dato);z++)
+				r.dato[z]=toupper(r.dato[z]);
+	        r.PI = -1;
+	        r.PD = -1;
+	        r.ARE = 0;
+	        fseek(fd, 0, 2);  //se localiza al final
+	        fwrite(&r, lr, 1, fd);
+	        //cout <<"1."<<endl;
+	        if(e.RAIZ == -1)
+	        {
+	            e.RAIZ = r.NR;
+	            //cout << " * Raiz" << endl;
+	        }
+	        else
+	        {
+	            x = e.RAIZ;
+	
+	            while( x != -1 )
+	            {
+	                //cout <<"2."<<endl;
+	                pos = (x-1)*lr + le;
+	                fseek(fd, pos, SEEK_SET);
+	                fread(&a, lr, 1, fd);
+	
+	                if( strcmp(r.dato, a.dato)>0 ){
+	                    x = a.PD;
+	                    lado = 'D';
+	                    continue;
+	                }
+	                if( strcmp(r.dato, a.dato)<0 ){
+	                    x = a.PI;
+	                    lado = 'I';
+	                    continue;
+	                }
+	
+	            }
+	            if(lado=='D')
+	            {
+	                a.PD = r.NR;
+	                //cout << " * Lado der. de "<< a.dato << endl;
+	            }
+	            if(lado=='I')
+	            {
+	                a.PI = r.NR;
+	                //cout << " * Lado izq. de "<< a.dato << endl;
+	            }
+	            //cout <<"3."<<endl;
+	            fseek(fd, pos, SEEK_SET);
+	            fwrite(&a, lr, 1, fd);
+	            //cout <<"4."<<endl;
+	        }
+	
+	        cout << "Desea agregar otro estudiante? [s/n]: ";
+			cin >> rpt;
+	    }while(rpt!='n');
+	
+	    fseek(fd, 0, SEEK_SET);
+	    fwrite(&e, le, 1, fd);
+    }
+    fclose(fd);
+}
+
+void Mostrar()
+{
+	cout<<"-------------------------------"<<endl;
+    cout<<"      Mostrar Estudiante"<<endl;
+    cout<<"-------------------------------"<<endl;
+    if( (fd=fopen("Estudiantes.txt", "r"))==NULL )
+    	cout << " No se pudo abrir el archivo"<< endl;
+	else
+	{
+	    fread(&e, le, 1, fd);
+	    while(fread(&r, lr, 1, fd)!=NULL)
+	    {   
+	        cout<<"Numero de registro: "<<r.NR<<endl<<"Nombre del estudiante: "<<r.dato<<endl;
+	        cout<<"--------------------------------"<<endl;
+	    }
+	}
+    fclose(fd);
+}
+
+void Buscar()
+{
+    int x, pos;
+    bool band;
+    char v_dato[12];
+    
+    cout<<"-------------------------------"<<endl;
+    cout<<"      Buscar Estudiante"<<endl;
+    cout<<"-------------------------------"<<endl;
+
+    if( (fd=fopen("Estudiantes.txt", "r"))==NULL )
+    {
+        cout << " No se pudo abrir ela archivo"<< endl;
+        return;
+    }
+
+    fflush(stdin);
+    cout << "Nombre del estudiante a buscar: ";
+	gets(v_dato);
+	for(int z=0;z<strlen(v_dato);z++)
+		v_dato[z]=toupper(v_dato[z]);
+    fread(&e, le, 1, fd);
+    x = e.RAIZ;
+    band = false;
+
+    while( x != -1 )
+    {
+        pos = (x-1)*lr + le;
+        fseek(fd, pos, SEEK_SET);
+        fread(&r, lr, 1, fd);
+
+        if( strcmp(v_dato, r.dato)>0 ) {
+            x = r.PD;
+            continue;
+        }
+        if( strcmp(v_dato, r.dato)<0 ) {
+            x = r.PI;
+            continue;
+        }
+
+        band = true;
+        cout<<"Numero de registro: "<<r.NR<<endl<<"Nombre del estudiante: "<<r.dato<<endl;
+	    cout<<"--------------------------------"<<endl;
+        break;
+    }
+
+    if(band==false)
+        cout << "No se encontro el estudiante..." << endl;
+
+    fclose(fd);
+}
+
+void Insertar()
+{
+    int x, pos;
+    char rpt, lado;
+    
+    cout<<"-------------------------------"<<endl;
+    cout<<"      Insertar Estudiante"<<endl;
+    cout<<"-------------------------------"<<endl;
+
+    if( (fd=fopen("Estudiantes.txt", "r+"))==NULL )
+        cout << "No se pudo abrir el archivo"<< endl;
+	else
+	{
+	    fread(&e, le, 1, fd);
+	
+	    do
+		{
+	        r.NR = ++e.NRS;
+	        fflush(stdin);
+	        cout << "Nombre: ";
+			gets(r.dato);
+			for(int z=0;z<strlen(r.dato);z++)
+				r.dato[z]=toupper(r.dato[z]);
+	        r.PI = -1;
+	        r.PD = -1;
+	        r.ARE = 0;
+	        fseek(fd, 0, SEEK_END);  // al final
+	        fwrite(&r, lr, 1, fd);
+	
+	        if(e.RAIZ == -1)
+	        {
+	            e.RAIZ = r.NR;
+	            //cout << " * Raiz" << endl;
+	        }
+	        else
+	        {
+	            x = e.RAIZ;
+	
+	            while( x != -1 )
+	            {
+	                pos = (x-1)*lr + le;
+	                fseek(fd, pos, SEEK_SET);
+	                fread(&a, lr, 1, fd);
+	
+	                if( strcmp(r.dato, a.dato)>0 ){
+	                    x = a.PD;
+	                    lado = 'D';
+	                    continue;
+	                }
+	                if( strcmp(r.dato, a.dato)<0 ){
+	                    x = a.PI;
+	                    lado = 'I';
+	                    continue;
+	                }
+	            }
+	            if(lado=='D')
+	            {
+	                a.PD = r.NR;
+	                //cout << " * Lado der. de "<< a.dato << endl;
+	            }
+	            if(lado=='I')
+	            {
+	                a.PI = r.NR;
+	                //cout << " * Lado izq. de "<< a.dato << endl;
+	            }
+	
+	            fseek(fd, pos, SEEK_SET);
+	            fwrite(&a, lr, 1, fd);
+	        }
+	
+	        cout << "Desea agregar otro estudiante? [s/n]: ";
+			cin >> rpt;
+	        cout << endl;
+	    }while(rpt!='n');
+	
+	    fseek(fd, 0, SEEK_SET);
+	    fwrite(&e, le, 1, fd);
+	}
+    fclose(fd);
+}
+
+int main()
+{
+    int opc;  // opcion
+    lr = sizeof(struct registro);
+    le = sizeof(struct encabezado);
+
+    do
+    {
+        system("cls");
+        cout<<"-------------------------------"<<endl;
+        cout<<"        Menu Principal"<<endl;
+        cout<<"-------------------------------"<<endl;
+        cout<<"1.- Escribir nuevo estudiante"<<endl;
+        cout<<"2.- Mostrar estudiantes"<<endl;
+        cout<<"3.- Insertar otro estudiante"<<endl;
+        cout<<"4.- Buscar estudiante"<<endl;
+        cout<<"5.- Salir del programa"<<endl;
+        cout<<"Elige tu opcion: ";
+        cin>>opc;
+
+        switch(opc)
+        {
+            case 1:
+            	system("cls");
+                Escribir();
+                system("pause");
+				break;
+            case 2:
+            	system("cls");
+                Mostrar();
+				system("pause");
+				break;
+			case 3:
+            	system("cls");
+                Insertar();
+				system("pause");
+				break;
+            case 4:
+            	system("cls");
+                Buscar();
+				system("pause");
+				break;
+            case 5:
+                cout<<"Ha elegido la opcion de salir..."<<endl;
+        }
+
+    }while(opc != 5);
+
+    return 0;
+}
