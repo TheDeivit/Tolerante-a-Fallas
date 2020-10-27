@@ -129,59 +129,6 @@ void Mostrar()
 	}
     fclose(fd);
 }
-
-void Buscar()
-{
-    int x, pos;
-    bool band;
-    char v_dato[12];
-    
-    cout<<"-------------------------------"<<endl;
-    cout<<"      Buscar Estudiante"<<endl;
-    cout<<"-------------------------------"<<endl;
-
-    if( (fd=fopen("Estudiantes.txt", "r"))==NULL )
-    {
-        cout << " No se pudo abrir ela archivo"<< endl;
-        return;
-    }
-
-    fflush(stdin);
-    cout << "Nombre del estudiante a buscar: ";
-	gets(v_dato);
-	for(int z=0;z<strlen(v_dato);z++)
-		v_dato[z]=toupper(v_dato[z]);
-    fread(&e, le, 1, fd);
-    x = e.RAIZ;
-    band = false;
-
-    while( x != -1 )
-    {
-        pos = (x-1)*lr + le;
-        fseek(fd, pos, SEEK_SET);
-        fread(&r, lr, 1, fd);
-
-        if( strcmp(v_dato, r.dato)>0 ) {
-            x = r.PD;
-            continue;
-        }
-        if( strcmp(v_dato, r.dato)<0 ) {
-            x = r.PI;
-            continue;
-        }
-
-        band = true;
-        cout<<"Numero de registro: "<<r.NR<<endl<<"Nombre del estudiante: "<<r.dato<<endl;
-	    cout<<"--------------------------------"<<endl;
-        break;
-    }
-
-    if(band==false)
-        cout << "No se encontro el estudiante..." << endl;
-
-    fclose(fd);
-}
-
 void Insertar()
 {
     int x, pos;
@@ -263,6 +210,60 @@ void Insertar()
     fclose(fd);
 }
 
+void Buscar()
+{
+    int x, pos;
+    bool band;
+    char v_dato[12];
+    
+    cout<<"-------------------------------"<<endl;
+    cout<<"      Buscar Estudiante"<<endl;
+    cout<<"-------------------------------"<<endl;
+
+    if( (fd=fopen("Estudiantes.txt", "r"))==NULL )
+    {
+        cout << " No se pudo abrir ela archivo"<< endl;
+        return;
+    }
+
+    fflush(stdin);
+    cout << "Nombre del estudiante a buscar: ";
+	gets(v_dato);
+	for(int z=0;z<strlen(v_dato);z++)
+		v_dato[z]=toupper(v_dato[z]);
+    fread(&e, le, 1, fd);
+    x = e.RAIZ;
+    band = false;
+
+    while( x != -1 )
+    {
+        pos = (x-1)*lr + le;
+        fseek(fd, pos, SEEK_SET);
+        fread(&r, lr, 1, fd);
+
+        if( strcmp(v_dato, r.dato)>0 ) {
+            x = r.PD;
+            continue;
+        }
+        if( strcmp(v_dato, r.dato)<0 ) {
+            x = r.PI;
+            continue;
+        }
+
+        band = true;
+        cout<<"Numero de registro: "<<r.NR<<endl<<"Nombre del estudiante: "<<r.dato<<endl;
+	    cout<<"--------------------------------"<<endl;
+        break;
+    }
+
+    if(band==false)
+        cout << "No se encontro el estudiante..." << endl;
+
+    fclose(fd);
+}
+
+
+
 int main()
 {
     int opc;  // opcion
@@ -275,12 +276,12 @@ int main()
         cout<<"-------------------------------"<<endl;
         cout<<"        Menu Principal"<<endl;
         cout<<"-------------------------------"<<endl;
-        cout<<"1.- Escribir nuevo estudiante"<<endl;
+        cout<<"1.- Agregar un nuevo estudiante<<endl;
         cout<<"2.- Mostrar estudiantes"<<endl;
-        cout<<"3.- Insertar otro estudiante"<<endl;
+        cout<<"3.- Agregar otro estudiante"<<endl;
         cout<<"4.- Buscar estudiante"<<endl;
         cout<<"5.- Salir del programa"<<endl;
-        cout<<"Elige tu opcion: ";
+        cout<<"Elige la opcion deseada: ";
         cin>>opc;
 
         switch(opc)
