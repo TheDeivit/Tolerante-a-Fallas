@@ -7,6 +7,23 @@
 #include <iomanip>
 using namespace std;
 
+struct registro{
+    int  NR;
+    char dato[40];
+    int  PD;
+    int  PI;
+    int  ARE;
+}r, a;
+
+struct encabezado{
+    int NRS;    // numero de registros
+    int RAIZ;
+    int URE;
+}e;
+
+FILE *fd;
+int lr, le;   // longitud de registro y encabezado
+
 void Escribir()
 {
     int x, pos;
