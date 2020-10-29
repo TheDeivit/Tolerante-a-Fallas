@@ -110,6 +110,26 @@ void Escribir()
     }
     fclose(fd);
 }
+
+void Mostrar()
+{
+	cout<<"-------------------------------"<<endl;
+    cout<<"      Mostrar Estudiante"<<endl;
+    cout<<"-------------------------------"<<endl;
+    if( (fd=fopen("Estudiantes.txt", "r"))==NULL )
+    	cout << " No se pudo abrir el archivo"<< endl;
+	else
+	{
+	    fread(&e, le, 1, fd);
+	    while(fread(&r, lr, 1, fd)!=NULL)
+	    {   
+	        cout<<"Numero de registro: "<<r.NR<<endl<<"Nombre del estudiante: "<<r.dato<<endl;
+	        cout<<"--------------------------------"<<endl;
+	    }
+	}
+    fclose(fd);
+}
+
 int main()
 {
     int opc;  // opcion
