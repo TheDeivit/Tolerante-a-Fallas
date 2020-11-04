@@ -277,7 +277,7 @@ int main()
         cout<<"-------------------------------"<<endl;
         cout<<"1.- Escribir nuevo estudiante"<<endl;
         cout<<"2.- Mostrar estudiantes"<<endl;
-        cout<<"3.- Insertar otro estudiante"<<endl;
+        cout<<"3.- Ingresar otro estudiante"<<endl;
         cout<<"4.- Buscar estudiante"<<endl;
         cout<<"5.- Salir del programa"<<endl;
         cout<<"Elige tu opcion: ";
