@@ -121,7 +121,7 @@ void Mostrar()
 	else
 	{
 	    fread(&e, le, 1, fd);
-	    while(fread(&r, lr, 1, fd)!=NULL)
+	    while(fread(&r, lr, 1, fd)!=0)
 	    {   
 	        cout<<"Numero de registro: "<<r.NR<<endl<<"Nombre del estudiante: "<<r.dato<<endl;
 	        cout<<"--------------------------------"<<endl;
