@@ -17,7 +17,7 @@ struct NodoLDL
     {}
 };
 
-using namespace std;
+using namespace std; // SONIA.
 
 template <typename T>
 class LDL
@@ -31,15 +31,10 @@ public:
     LDL() : listSize(0), listFront(nullptr), listBack(nullptr)
     {}
 
-    LDL(const LDL &other)
-    {
-        listSize = 0;
-        listFront = nullptr;
-        listBack = nullptr;
-
+	LDL(const LDL &other) : listSize(0), listFront(nullptr), listBack(nullptr) {
         for(size_t i(0); i < other.size();++i)
             push_back(other[i]);
-    }
+	}
 
     LDL &operator = (const LDL &other)
     {
@@ -51,6 +46,11 @@ public:
             push_back(other[i]);
         return *this;
     }
+
+	~LDL() {
+		delete listBack;
+		delete listFront;
+	}
 
     bool empty() const;
     size_t size() const;
