@@ -3,16 +3,29 @@
 #include <iostream>
 #include <stdexcept>
 
+template<typename T>
+struct NodoLDL
+{
+    T dato;
+    NodoLDL *anterior;
+    NodoLDL *siguiente;
+
+    NodoLDL(const T &elem, NodoLDL *ant = nullptr, NodoLDL *sig = nullptr):
+        dato(elem),
+        anterior(ant),
+        siguiente(sig)
+    {}
+};
+
 using namespace std;
 
 template <typename T>
 class LDL
 {
 private:
-#include "nodoldl.h"
     size_t listSize;
-    NodoLDL *listFront;
-    NodoLDL *listBack;
+    NodoLDL<T> *listFront;
+    NodoLDL<T> *listBack;
 
 public:
     LDL() : listSize(0), listFront(nullptr), listBack(nullptr)
@@ -71,12 +84,12 @@ void LDL<T>::push_front(const T &elem)
 {
     if(empty())
     {
-        listFront = new NodoLDL(elem);
+        listFront = new NodoLDL<T>(elem);
         listBack = listFront;
     }
     else
     {
-        NodoLDL *temp = new NodoLDL(elem, nullptr, listFront);
+        NodoLDL<T> *temp = new NodoLDL<T>(elem, nullptr, listFront);
         listFront -> anterior = temp;
         listFront = temp;
     }
@@ -88,12 +101,12 @@ void LDL<T>::push_back(const T &elem)
 {
     if(empty())
     {
-        listFront = new NodoLDL(elem);
+        listFront = new NodoLDL<T>(elem);
         listBack = listFront;
     }
     else
     {
-        NodoLDL *temp = new NodoLDL(elem, listBack);
+        NodoLDL<T> *temp = new NodoLDL<T>(elem, listBack);
         listBack -> siguiente = temp;
         listBack = temp;
     }
@@ -121,7 +134,7 @@ void LDL<T>::pop_front()
 {
     if(empty())
         throw invalid_argument("pop front() on empty list");
-    NodoLDL *temp = listFront;
+    NodoLDL<T> *temp = listFront;
     listFront = listFront -> siguiente;
     delete temp;
     temp = nullptr;
@@ -133,7 +146,7 @@ void LDL<T>::pop_back()
 {
     if(empty())
         throw invalid_argument("pop back() on empty list");
-    NodoLDL *temp = listFront;
+    NodoLDL<T> *temp = listFront;
     while(temp != nullptr and temp -> siguiente != listBack)
         temp = temp -> siguiente;
     delete listBack;
@@ -156,10 +169,10 @@ void LDL<T>::insert(size_t position, const T &elem)
         push_back(elem);
     else
     {
-        NodoLDL *temp = listFront;
+        NodoLDL<T> *temp = listFront;
         for(size_t i(0); i < position-1;++i)
             temp = temp -> siguiente;
-        NodoLDL *newNodo = new NodoLDL(elem, temp -> siguiente);
+        NodoLDL<T> *newNodo = new NodoLDL<T>(elem, temp -> siguiente);
         temp -> siguiente = newNodo;
         ++listSize;
     }
@@ -178,10 +191,10 @@ void LDL<T>::erase(size_t position)
         pop_back();
     else
     {
-        NodoLDL *temp = listFront;
+        NodoLDL<T> *temp = listFront;
         for (size_t i(0); i < position-1;++i)
             temp = temp -> siguiente;
-        NodoLDL *eliminar = temp -> siguiente;
+        NodoLDL<T> *eliminar = temp -> siguiente;
         temp -> siguiente = eliminar -> siguiente;
         delete eliminar;
         eliminar = nullptr;
@@ -205,7 +218,7 @@ void LDL<T>::remove(const T &value)
 {
     if(empty())
         throw invalid_argument("Remove() on empty list");
-    NodoLDL *temp = listFront;
+    NodoLDL<T> *temp = listFront;
     T dato;
     size_t i= 0;
 
@@ -229,7 +242,7 @@ T &LDL<T>::operator [](size_t idx) const
         throw invalid_argument("[] on empty list");
     else if (idx >= listSize)
         throw invalid_argument("index out of range");
-    NodoLDL *temp = listFront;
+    NodoLDL<T> *temp = listFront;
     for(size_t i(0); i < idx; ++i)
         temp = temp -> siguiente;
     return temp->dato;
