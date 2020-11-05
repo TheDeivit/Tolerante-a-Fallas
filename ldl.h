@@ -17,7 +17,6 @@ struct NodoLDL
     {}
 };
 
-using namespace std; // SONIA.
 
 template <typename T>
 class LDL
@@ -117,7 +116,7 @@ template <typename T>
 const T &LDL<T>::front() const
 {
     if(empty())
-        throw invalid_argument("Front() on empty list");
+        throw std::invalid_argument("Front() on empty list");
     return listFront -> dato;
 }
 
@@ -125,7 +124,7 @@ template <typename T>
 const T &LDL<T>::back() const
 {
     if(empty())
-        throw  invalid_argument("Back() on empty list");
+        throw  std::invalid_argument("Back() on empty list");
     return listBack -> dato;
 }
 
@@ -133,7 +132,7 @@ template <typename T>
 void LDL<T>::pop_front()
 {
     if(empty())
-        throw invalid_argument("pop front() on empty list");
+        throw std::invalid_argument("pop front() on empty list");
     NodoLDL<T> *temp = listFront;
     listFront = listFront -> siguiente;
     delete temp;
@@ -145,7 +144,7 @@ template <typename T>
 void LDL<T>::pop_back()
 {
     if(empty())
-        throw invalid_argument("pop back() on empty list");
+        throw std::invalid_argument("pop back() on empty list");
     NodoLDL<T> *temp = listFront;
     while(temp != nullptr and temp -> siguiente != listBack)
         temp = temp -> siguiente;
@@ -160,9 +159,9 @@ template <typename  T>
 void LDL<T>::insert(size_t position, const T &elem)
 {
     if(empty())
-        throw invalid_argument("Insert() on empty list");
+        throw std::invalid_argument("Insert() on empty list");
     else if(position > listSize)
-        throw invalid_argument("Insert() on non valid position");
+        throw std::invalid_argument("Insert() on non valid position");
     else if (position == 0)
         push_front(elem);
     else if (position == listSize)
@@ -182,9 +181,9 @@ template <typename T>
 void LDL<T>::erase(size_t position)
 {
     if(empty())
-        throw invalid_argument("Erase() on empty list");
+        throw std::invalid_argument("Erase() on empty list");
     else if(position >= listSize)
-        throw invalid_argument("Erase() on non valid position");
+        throw std::invalid_argument("Erase() on non valid position");
     else if(position == 0)
         pop_front();
     else if(position == listSize-1)
@@ -217,7 +216,7 @@ template <typename T>
 void LDL<T>::remove(const T &value)
 {
     if(empty())
-        throw invalid_argument("Remove() on empty list");
+        throw std::invalid_argument("Remove() on empty list");
     NodoLDL<T> *temp = listFront;
     T dato;
     size_t i= 0;
@@ -239,9 +238,9 @@ template <typename T>
 T &LDL<T>::operator [](size_t idx) const
 {
     if(empty())
-        throw invalid_argument("[] on empty list");
+        throw std::invalid_argument("[] on empty list");
     else if (idx >= listSize)
-        throw invalid_argument("index out of range");
+        throw std::invalid_argument("index out of range");
     NodoLDL<T> *temp = listFront;
     for(size_t i(0); i < idx; ++i)
         temp = temp -> siguiente;
